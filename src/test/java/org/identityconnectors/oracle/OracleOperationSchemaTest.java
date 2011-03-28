@@ -3,8 +3,9 @@
  */
 package org.identityconnectors.oracle;
 
-import static org.junit.Assert.assertNotNull;
-
+import static org.testng.AssertJUnit.assertNotNull;
+import static org.fest.assertions.Assertions.assertThat;
+import org.testng.annotations.Test;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -15,8 +16,6 @@ import org.identityconnectors.framework.common.objects.AttributeInfo;
 import org.identityconnectors.framework.common.objects.ObjectClass;
 import org.identityconnectors.framework.common.objects.ObjectClassInfo;
 import org.identityconnectors.framework.common.objects.Schema;
-import org.junit.Assert;
-import org.junit.Test;
 
 /**
  * @author kitko
@@ -38,7 +37,8 @@ public class OracleOperationSchemaTest extends OracleConnectorAbstractTest {
     			}
     		}
     	}
-    	Assert.assertThat("All attributes must be present in schema",attributeNames, new IsEqual<Set<String>>(Collections.<String>emptySet()));
+    	//Assert.assertThat("All attributes must be present in schema",attributeNames, new IsEqual<Set<String>>(Collections.<String>emptySet()));
+    	assertThat(attributeNames).isSameAs(Collections.<String>emptySet());
     }
 
 

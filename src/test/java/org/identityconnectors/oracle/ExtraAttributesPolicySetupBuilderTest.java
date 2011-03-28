@@ -3,16 +3,15 @@
  */
 package org.identityconnectors.oracle;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
+import static org.testng.AssertJUnit.assertEquals;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+import org.testng.AssertJUnit;
 import org.identityconnectors.framework.common.FrameworkUtil;
 import org.identityconnectors.framework.spi.operations.CreateOp;
 import org.identityconnectors.framework.spi.operations.SPIOperation;
 import org.identityconnectors.framework.spi.operations.UpdateOp;
 import org.identityconnectors.test.common.TestHelpers;
-import org.junit.Assert;
-import org.junit.Test;
 
 /**
  * @author kitko
@@ -53,31 +52,31 @@ public class ExtraAttributesPolicySetupBuilderTest {
 		
 		try{
 			builder.parseArray(new String[]{"dummy"});
-			fail("Must fail for invalid array");
+			Assert.fail("Must fail for invalid array");
 		}
 		catch(RuntimeException e){}
 		
 		try{
 			builder.parseArray(new String[]{"dummy={a=b}"});
-			fail("Must fail for invalid array");
+			Assert.fail("Must fail for invalid array");
 		}
 		catch(RuntimeException e){}
 		
 		try{
 			builder.parseArray(new String[]{"PASSWORD={a=b}"});
-			fail("Must fail for invalid array");
+			Assert.fail("Must fail for invalid array");
 		}
 		catch(RuntimeException e){}
 
 		try{
 			builder.parseArray(new String[]{"PASSWORD={invalid=FAIL}"});
-			fail("Must fail for invalid array");
+			Assert.fail("Must fail for invalid array");
 		}
 		catch(RuntimeException e){}
 		
 		try{
 			builder.parseArray(new String[]{"PASSWORD={create=invalid}"});
-			fail("Must fail for invalid array");
+			Assert.fail("Must fail for invalid array");
 		}
 		catch(RuntimeException e){}
 		
@@ -129,31 +128,31 @@ public class ExtraAttributesPolicySetupBuilderTest {
 		
 		try{
 			builder.parseMap("dummy");
-			fail("Must fail for invalid map");
+			Assert.fail("Must fail for invalid map");
 		}
 		catch(RuntimeException e){}
 		
 		try{
 			builder.parseMap("dummy={a=b}");
-			fail("Must fail for invalid map");
+			Assert.fail("Must fail for invalid map");
 		}
 		catch(RuntimeException e){}
 		
 		try{
 			builder.parseMap("PASSWORD={a=b}");
-			fail("Must fail for invalid map");
+			Assert.fail("Must fail for invalid map");
 		}
 		catch(RuntimeException e){}
 
 		try{
 			builder.parseMap("PASSWORD={invalid=FAIL}");
-			fail("Must fail for invalid map");
+			Assert.fail("Must fail for invalid map");
 		}
 		catch(RuntimeException e){}
 		
 		try{
 			builder.parseMap("PASSWORD={create=invalid}");
-			fail("Must fail for invalid map");
+			Assert.fail("Must fail for invalid map");
 		}
 		catch(RuntimeException e){}
 		
@@ -183,7 +182,7 @@ public class ExtraAttributesPolicySetupBuilderTest {
 		ExtraAttributesPolicySetup setup = builder.build();
 		for(OracleUserAttribute oua : OracleUserAttribute.values()){
 			for(Class<? extends SPIOperation> op : FrameworkUtil.allSPIOperations()){
-				Assert.assertNotNull("ExtraAttributesPolicy not defined", setup.getPolicy(oua, op));
+				AssertJUnit.assertNotNull("ExtraAttributesPolicy not defined", setup.getPolicy(oua, op));
 			}
 		}
 		assertEquals(ExtraAttributesPolicy.IGNORE, setup.getPolicy(OracleUserAttribute.PASSWORD, CreateOp.class));

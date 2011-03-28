@@ -3,23 +3,22 @@
  */
 package org.identityconnectors.oracle;
 
+import static org.testng.AssertJUnit.assertNull;
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertNotNull;
+import static org.testng.AssertJUnit.assertTrue;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeClass;
+import org.testng.Assert;
 import static org.identityconnectors.oracle.OracleConnectorAbstractTest.assertEqualsIgnoreCase;
 import static org.identityconnectors.oracle.OracleUserAttribute.USER;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.identityconnectors.dbcommon.SQLUtil;
 import org.identityconnectors.test.common.TestHelpers;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 /**
  * Tests related to OracleUserReader
@@ -118,7 +117,7 @@ public class OracleUserReaderTest {
         assertTrue("Quota must be set at least to 30k",new Long(30000).compareTo(quota) < 0);
         try{
         	userReader.readUserDefTSQuota("dummyUser");
-        	fail("Should not be able to return quota for unknown user");
+        	Assert.fail("Should not be able to return quota for unknown user");
         }
         catch(IllegalArgumentException e){}
         //For 10.2 , not working

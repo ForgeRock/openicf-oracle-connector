@@ -3,16 +3,19 @@
  */
 package org.identityconnectors.oracle;
 
+import static org.testng.AssertJUnit.assertNull;
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertNotNull;
+import static org.testng.AssertJUnit.assertTrue;
+import static org.fest.assertions.Assertions.assertThat;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.Assert;
 import static org.identityconnectors.oracle.OracleConstants.ORACLE_AUTHENTICATION_ATTR_NAME;
 import static org.identityconnectors.oracle.OracleConstants.ORACLE_PRIVS_ATTR_NAME;
 import static org.identityconnectors.oracle.OracleUserAttribute.PROFILE;
 import static org.identityconnectors.oracle.OracleUserAttribute.USER;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,10 +38,6 @@ import org.identityconnectors.framework.common.objects.OperationalAttributes;
 import org.identityconnectors.framework.common.objects.Uid;
 import org.identityconnectors.framework.spi.operations.CreateOp;
 import org.identityconnectors.test.common.TestHelpers;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.matchers.JUnitMatchers;
 
 /**
@@ -50,8 +49,8 @@ public class OracleOperationCreateTest extends OracleConnectorAbstractTest {
     
     
     /** Deletes before create  */
-    @Before
-    public void before(){
+    @BeforeMethod
+	public void before(){
         try{
             facade.delete(ObjectClass.ACCOUNT, new Uid(TEST_USER.toUpperCase()), null);
         }
@@ -61,8 +60,8 @@ public class OracleOperationCreateTest extends OracleConnectorAbstractTest {
     }
     
     /** Deletes after create */
-    @After
-    public void after(){
+    @AfterMethod
+	public void after(){
         try{
             facade.delete(ObjectClass.ACCOUNT, new Uid(TEST_USER.toUpperCase()), null);
         }
@@ -75,7 +74,7 @@ public class OracleOperationCreateTest extends OracleConnectorAbstractTest {
         //test for fail when using groups
         try{
             connector.create(ObjectClass.GROUP, Collections.<Attribute>emptySet(), null);
-            fail("Create must fail for group");
+            Assert.fail("Create must fail for group");
         }
         catch(IllegalArgumentException e){}
     }
@@ -103,7 +102,7 @@ public class OracleOperationCreateTest extends OracleConnectorAbstractTest {
         try {
             SQLUtil.executeUpdateStatement(connector.getOrCreateAdminConnection(), "grant connect to " + testConf.getCSSetup().formatToken(USER,uid.getUidValue()));
         } catch (SQLException e) {
-            fail(e.getMessage());
+            Assert.fail(e.getMessage());
         }
         facade.authenticate( ObjectClass.ACCOUNT, uid.getUidValue(), password, null);
         facade.delete(ObjectClass.ACCOUNT, uid, null);
@@ -123,7 +122,7 @@ public class OracleOperationCreateTest extends OracleConnectorAbstractTest {
         Uid uid = facade.create(ObjectClass.ACCOUNT, CollectionUtil.newSet(authentication,name,passwordAttribute), null);
         try{
             facade.create(ObjectClass.ACCOUNT, CollectionUtil.newSet(authentication,name,passwordAttribute), null);
-            fail("Create of existing user must throw AlreadyExistsException");
+            Assert.fail("Create of existing user must throw AlreadyExistsException");
         }
         catch(AlreadyExistsException e){
             facade.delete(ObjectClass.ACCOUNT, uid, null);
@@ -140,7 +139,7 @@ public class OracleOperationCreateTest extends OracleConnectorAbstractTest {
         Attribute authentication = AttributeBuilder.build(OracleConstants.ORACLE_AUTHENTICATION_ATTR_NAME, OracleConstants.ORACLE_AUTH_EXTERNAL);
         try{
         	facade.create(ObjectClass.ACCOUNT, CollectionUtil.newSet(authentication,name,AttributeBuilder.buildPassword(password)), null);
-        	fail("Cannot set password for external authentication");
+        	Assert.fail("Cannot set password for external authentication");
         }catch(RuntimeException e){}
         Uid uid = facade.create(ObjectClass.ACCOUNT, CollectionUtil.newSet(authentication,name), null);
         assertNotNull(uid);
@@ -184,7 +183,7 @@ public class OracleOperationCreateTest extends OracleConnectorAbstractTest {
         Uid uid = null;
         try{
         	uid = facade.create(ObjectClass.ACCOUNT, CollectionUtil.newSet(authentication,name,AttributeBuilder.buildPassword(password),globalName), null);
-        	fail("Password cannot be provided for global authentication");
+        	Assert.fail("Password cannot be provided for global authentication");
         }catch(RuntimeException e){
         }
         try{
@@ -195,11 +194,11 @@ public class OracleOperationCreateTest extends OracleConnectorAbstractTest {
                 if("67000".equals(((SQLException)e.getCause()).getSQLState()) && 439 == ((SQLException)e.getCause()).getErrorCode()){
                 }
                 else{
-                    fail(e.getMessage());
+                    Assert.fail(e.getMessage());
                 }
             }
             else{
-                fail(e.getMessage());
+                Assert.fail(e.getMessage());
             }
         }
         if(uid != null){
@@ -357,7 +356,7 @@ public class OracleOperationCreateTest extends OracleConnectorAbstractTest {
             connector.getOrCreateAdminConnection().commit();
         }
         catch(SQLException e){
-            fail(e.getMessage());
+            Assert.fail(e.getMessage());
         }
         Attribute authentication = AttributeBuilder.build(OracleConstants.ORACLE_AUTHENTICATION_ATTR_NAME, OracleConstants.ORACLE_AUTH_LOCAL);
         Attribute name = new Name(TEST_USER);
@@ -410,7 +409,7 @@ public class OracleOperationCreateTest extends OracleConnectorAbstractTest {
         authentication = AttributeBuilder.build(OracleConstants.ORACLE_AUTHENTICATION_ATTR_NAME, OracleConstants.ORACLE_AUTH_EXTERNAL);
         try{
         	uid = facade.create(ObjectClass.ACCOUNT, CollectionUtil.newSet(authentication, name, expirePassword), null);
-        	fail("Create with external auth and expire password must fail");
+        	Assert.fail("Create with external auth and expire password must fail");
         }catch(ConnectorException e){}
         //Set ignoreExtrAtt
         OracleConfiguration newConf = OracleConfigurationTest.createSystemConfiguration();
@@ -478,7 +477,7 @@ public class OracleOperationCreateTest extends OracleConnectorAbstractTest {
         assertEqualsIgnoreCase(TEST_USER, record.getUserName());
         OracleRolePrivReader roleReader = new OracleRolePrivReader(connector.getOrCreateAdminConnection());
         final List<String> rolesRead = roleReader.readRoles(uid.getUidValue());
-        Assert.assertThat(rolesRead, JUnitMatchers.hasItem(cs.normalizeToken(OracleUserAttribute.ROLE,role)));
+        assertThat(rolesRead).contains(cs.normalizeToken(OracleUserAttribute.ROLE,role));
     }
     
     /**
@@ -503,8 +502,8 @@ public class OracleOperationCreateTest extends OracleConnectorAbstractTest {
         assertEqualsIgnoreCase(TEST_USER, record.getUserName());
         OracleRolePrivReader roleReader = new OracleRolePrivReader(connector.getOrCreateAdminConnection());
         final List<String> privRead = roleReader.readAllPrivileges(uid.getUidValue());
-        Assert.assertThat(privRead, JUnitMatchers.hasItem("CREATE SESSION"));
-        Assert.assertThat(privRead, JUnitMatchers.hasItem("SELECT ON " + testConf.getUserOwner() + ".MYTABLE"));
+        assertThat(privRead).contains("CREATE SESSION");
+        assertThat(privRead).contains("SELECT ON " + testConf.getUserOwner() + ".MYTABLE");
     }
 	
 	/** Test that create will fail on any not known attribute 
@@ -527,28 +526,28 @@ public class OracleOperationCreateTest extends OracleConnectorAbstractTest {
 		badAttrs.add(AttributeBuilder.buildDisableDate(0));
 		try{
 			facade.create(ObjectClass.ACCOUNT, badAttrs, null);
-			fail("Disabled date should not be supported");
+			Assert.fail("Disabled date should not be supported");
 		}
 		catch(IllegalArgumentException e){}
 		badAttrs = new HashSet<Attribute>(attrs); 
 		badAttrs.add(AttributeBuilder.buildPasswordExpirationDate(0));
 		try{
 			facade.create(ObjectClass.ACCOUNT, badAttrs, null);
-			fail("Expired password date should not be supported");
+			Assert.fail("Expired password date should not be supported");
 		}
 		catch(IllegalArgumentException e){}
 		badAttrs = new HashSet<Attribute>(attrs); 
 		badAttrs.add(AttributeBuilder.build("dummy","dummyValue"));
 		try{
 			facade.create(ObjectClass.ACCOUNT, badAttrs, null);
-			fail("Dummy attribute should not be supported");
+			Assert.fail("Dummy attribute should not be supported");
 		}
 		catch(IllegalArgumentException e){}
 		
 		//Test create no attributes
 		try{
 			facade.create(ObjectClass.ACCOUNT, Collections.<Attribute>emptySet(), null);
-			fail("Create must fail for no attributes");
+			Assert.fail("Create must fail for no attributes");
 		}catch(RuntimeException e){}
 		
 		//try other case of attributes
@@ -582,7 +581,7 @@ public class OracleOperationCreateTest extends OracleConnectorAbstractTest {
 		OracleSpecifics.killConnection(connector.getOrCreateAdminConnection(), testConnector.getOrCreateAdminConnection());
 		try{
 			uid = testConnector.create(ObjectClass.ACCOUNT, Collections.<Attribute>singleton(new Name(TEST_USER)), null);
-			fail("Create must fail for killed connection");
+			Assert.fail("Create must fail for killed connection");
 		}catch(RuntimeException e){}
 		testConnector.dispose();
 	}

@@ -1,16 +1,16 @@
 package org.identityconnectors.oracle;
 
-import static org.junit.Assert.assertTrue;
-
+import static org.testng.AssertJUnit.assertTrue;
+import static org.fest.assertions.Assertions.assertThat;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeClass;
+import org.testng.AssertJUnit;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
 import org.identityconnectors.dbcommon.SQLUtil;
 import org.identityconnectors.test.common.TestHelpers;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.junit.matchers.JUnitMatchers;
 
 /**
@@ -72,8 +72,8 @@ public class OracleRolePrivReaderTest {
         SQLUtil.executeUpdateStatement(conn,"grant create session to \"" + user + "\"");
         SQLUtil.executeUpdateStatement(conn,"grant select on mytable to \"" + user + "\"");
         final List<String> readPrivileges = privReader.readAllPrivileges(user);
-        Assert.assertThat(readPrivileges, JUnitMatchers.hasItem("CREATE SESSION"));
-        Assert.assertThat(readPrivileges, JUnitMatchers.hasItem("SELECT ON " + cfg.getUserOwner() + ".MYTABLE"));
+        assertThat(readPrivileges).contains("CREATE SESSION");
+        assertThat(readPrivileges).contains("SELECT ON " + cfg.getUserOwner() + ".MYTABLE");
         SQLUtil.executeUpdateStatement(conn, "drop user \"" + user + "\"");
         SQLUtil.executeUpdateStatement(conn, "drop table MYTABLE");
     }
@@ -90,7 +90,7 @@ public class OracleRolePrivReaderTest {
 	    SQLUtil.executeUpdateStatement(conn,"grant alter session to \"" + user + "\"");
 	    SQLUtil.executeUpdateStatement(conn,"grant debug connect session to \"" + user + "\"");
 	    final List<String> privileges = privReader.readSystemPrivileges(user);
-	    Assert.assertThat(privileges, JUnitMatchers.hasItems("CREATE SESSION","ALTER SESSION","DEBUG CONNECT SESSION"));
+	    assertThat(privileges).contains("CREATE SESSION","ALTER SESSION","DEBUG CONNECT SESSION");
 	    SQLUtil.executeUpdateStatement(conn, "drop user \"" + user + "\"");
 	}
 	
@@ -114,10 +114,10 @@ public class OracleRolePrivReaderTest {
         final List<String> privileges = privReader.readObjectPrivileges(user);
         SQLUtil.executeUpdateStatement(conn, "drop user \"" + user + "\"");
         SQLUtil.executeUpdateStatement(conn, "drop table MYTABLE");
-        Assert.assertEquals("Must have just 3 object privileges", 3, privileges.size());
-        Assert.assertThat(privileges, JUnitMatchers.hasItem("SELECT ON " + cfg.getUserOwner() + ".MYTABLE"));
-        Assert.assertThat(privileges, JUnitMatchers.hasItem("DELETE ON " + cfg.getUserOwner() + ".MYTABLE"));
-        Assert.assertThat(privileges, JUnitMatchers.hasItem("UPDATE ON " + cfg.getUserOwner() + ".MYTABLE"));
+        AssertJUnit.assertEquals("Must have just 3 object privileges", 3, privileges.size());
+        assertThat(privileges).contains("SELECT ON " + cfg.getUserOwner() + ".MYTABLE");
+        assertThat(privileges).contains("DELETE ON " + cfg.getUserOwner() + ".MYTABLE");
+        assertThat(privileges).contains("UPDATE ON " + cfg.getUserOwner() + ".MYTABLE");
         
     }
 	

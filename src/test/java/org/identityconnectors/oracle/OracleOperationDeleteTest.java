@@ -3,8 +3,8 @@
  */
 package org.identityconnectors.oracle;
 
-import static org.junit.Assert.fail;
-
+import org.testng.annotations.Test;
+import org.testng.Assert;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -19,7 +19,6 @@ import org.identityconnectors.framework.common.objects.Name;
 import org.identityconnectors.framework.common.objects.ObjectClass;
 import org.identityconnectors.framework.common.objects.OperationOptions;
 import org.identityconnectors.framework.common.objects.Uid;
-import org.junit.Test;
 
 /**
  * @author kitko
@@ -38,7 +37,7 @@ public class OracleOperationDeleteTest extends OracleConnectorAbstractTest {
             facade.delete(ObjectClass.ACCOUNT, new Uid(testConf.getCSSetup().normalizeToken(OracleUserAttribute.USER, newUser)), null);
             try{
             	facade.delete(ObjectClass.ACCOUNT, new Uid(testConf.getCSSetup().normalizeToken(OracleUserAttribute.USER, newUser)), null);
-                fail("Delete should fail for unexistent user");
+                Assert.fail("Delete should fail for unexistent user");
             }
             catch(UnknownUidException e){}
         }
@@ -50,12 +49,12 @@ public class OracleOperationDeleteTest extends OracleConnectorAbstractTest {
         facade.delete(ObjectClass.ACCOUNT, uid, null);
         try{
             facade.delete(ObjectClass.ACCOUNT, uid, null);
-            fail("Delete should fail for unexistent user, previous delete was not successful");
+            Assert.fail("Delete should fail for unexistent user, previous delete was not successful");
         }
         catch(UnknownUidException e){}
         try{
             facade.delete(ObjectClass.GROUP, uid, null);
-            fail("Delete must fail for invalid object class");
+            Assert.fail("Delete must fail for invalid object class");
         }
         catch(IllegalArgumentException e){
         }
@@ -71,7 +70,7 @@ public class OracleOperationDeleteTest extends OracleConnectorAbstractTest {
         ConnectorFacade testFacade = createFacade(cfg);
         try{
         	testFacade.delete(ObjectClass.ACCOUNT, uid, null);
-        	fail("Delete must fail withou cascade");
+        	Assert.fail("Delete must fail withou cascade");
         }catch(RuntimeException e){}
         cfg.setDropCascade(true);
         testFacade = createFacade(cfg);
@@ -99,9 +98,9 @@ public class OracleOperationDeleteTest extends OracleConnectorAbstractTest {
         OracleSpecifics.killConnection(connector.getOrCreateAdminConnection(), testConnector.getOrCreateAdminConnection());
         try{
         	testConnector.delete(ObjectClass.ACCOUNT, uid, null);
-        	fail("Delete must fail for killed connection");
+        	Assert.fail("Delete must fail for killed connection");
         }catch(UnknownUidException e){
-        	fail("Should not throw UnknownUidException for killed connection");
+        	Assert.fail("Should not throw UnknownUidException for killed connection");
         }
         catch(RuntimeException e){
         }
@@ -111,9 +110,9 @@ public class OracleOperationDeleteTest extends OracleConnectorAbstractTest {
         //delete group must fail
         try{
         	connector.delete(ObjectClass.GROUP, uid, null);
-        	fail("Delete must fail group");
+        	Assert.fail("Delete must fail group");
         }catch(UnknownUidException e){
-        	fail("Should not throw UnknownUidException for group");
+        	Assert.fail("Should not throw UnknownUidException for group");
         }
         catch(RuntimeException e){
         }

@@ -23,6 +23,7 @@
 
 package org.identityconnectors.oracle;
 
+import org.testng.annotations.Test;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -38,7 +39,6 @@ import org.identityconnectors.framework.common.objects.Name;
 import org.identityconnectors.framework.common.objects.ObjectClass;
 import org.identityconnectors.framework.common.objects.Uid;
 import org.junit.Ignore;
-import org.junit.Test;
 
 /**
  * @author kitko

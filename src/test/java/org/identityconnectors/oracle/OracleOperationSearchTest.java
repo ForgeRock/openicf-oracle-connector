@@ -3,12 +3,16 @@
  */
 package org.identityconnectors.oracle;
 
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertNotNull;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeClass;
+import org.junit.Assert;
+import org.testng.AssertJUnit;
 import static org.identityconnectors.oracle.OracleUserAttribute.PROFILE;
 import static org.identityconnectors.oracle.OracleUserAttribute.ROLE;
 import static org.identityconnectors.oracle.OracleConstants.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -48,10 +52,6 @@ import org.identityconnectors.framework.common.objects.filter.NotFilter;
 import org.identityconnectors.framework.common.objects.filter.OrFilter;
 import org.identityconnectors.framework.common.objects.filter.StartsWithFilter;
 import org.identityconnectors.test.common.TestHelpers;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 /**
  * @author kitko
@@ -202,7 +202,7 @@ public class OracleOperationSearchTest extends OracleConnectorAbstractTest{
 			for(ConnectorObject object : objects){
 				for(String aName : attributesToGet){
 					if(object.getAttributeByName(aName) == null){
-						Assert.fail("Attribute : [" + aName + "] is missing");
+						AssertJUnit.fail("Attribute : [" + aName + "] is missing");
 					}
 				}
 			}
@@ -217,7 +217,7 @@ public class OracleOperationSearchTest extends OracleConnectorAbstractTest{
 						}
 					}
 					if(!isInGet){
-						Assert.fail("Attribute : [" + attr.getName() + "] is not in attributesToGet ");
+						AssertJUnit.fail("Attribute : [" + attr.getName() + "] is not in attributesToGet ");
 					}
 				}
 			}
@@ -456,13 +456,13 @@ public class OracleOperationSearchTest extends OracleConnectorAbstractTest{
 		//search by dummy
 		try{
 			TestHelpers.searchToList(connector,ObjectClass.ACCOUNT,new EqualsFilter(AttributeBuilder.build("dummy")));
-			Assert.fail("Should not search by dummy attribute");
+			AssertJUnit.fail("Should not search by dummy attribute");
 		}
 		catch(IllegalArgumentException e){}
 		//search by password must fail
 		try{
 			TestHelpers.searchToList(connector,ObjectClass.ACCOUNT,new EqualsFilter(AttributeBuilder.buildPassword("dummy".toCharArray())));
-			Assert.fail("Should not search by password attribute");
+			AssertJUnit.fail("Should not search by password attribute");
 		}
 		catch(IllegalArgumentException e){}
 		
@@ -483,7 +483,7 @@ public class OracleOperationSearchTest extends OracleConnectorAbstractTest{
 		options = new OperationOptionsBuilder().setAttributesToGet("dummy1","dummy2").build();
 		try{
 			TestHelpers.searchToList(connector, ObjectClass.ACCOUNT, FilterBuilder.equalTo(new Uid(user(1))),options);
-			Assert.fail("Must fail for invalid attributesToGet");
+			AssertJUnit.fail("Must fail for invalid attributesToGet");
 		}
 		catch(RuntimeException e){}
 		
@@ -532,7 +532,7 @@ public class OracleOperationSearchTest extends OracleConnectorAbstractTest{
 		OracleSpecifics.killConnection(connector.getOrCreateAdminConnection(), testConnector.getOrCreateAdminConnection());
 		try{
 			TestHelpers.searchToList(testConnector,ObjectClass.ACCOUNT,f);
-			Assert.fail("Search must fail for killed connection");
+			AssertJUnit.fail("Search must fail for killed connection");
 		}catch(RuntimeException e){}
 		testConnector.dispose();
 	}

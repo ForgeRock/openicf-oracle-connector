@@ -1,14 +1,14 @@
 package org.identityconnectors.oracle;
 
-import static org.junit.Assert.assertEquals;
-
+import static org.testng.AssertJUnit.assertEquals;
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
+import org.testng.Assert;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.identityconnectors.common.CollectionUtil;
 import org.identityconnectors.test.common.TestHelpers;
-import org.junit.Assert;
-import org.junit.Test;
 
 /** 
  * Tests for {@link MapParser}
@@ -59,10 +59,11 @@ public class MapParserTest {
         testFail(new Runnable(){public void run(){parseMap("a={b,c=d}");}}, "Must fail for invalid bracket");
     }
     
-    private void testFail(Runnable runnable,String msg){
+    @Test(enabled = false)
+	private void testFail(Runnable runnable,String msg){
         try{
             runnable.run();
-            Assert.fail(msg);
+            AssertJUnit.fail(msg);
         }
         catch(RuntimeException e){}
     }

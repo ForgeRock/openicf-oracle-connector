@@ -1,11 +1,13 @@
 package org.identityconnectors.oracle;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.fail;
-
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertNotSame;
+import static org.testng.AssertJUnit.assertNotNull;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+import org.testng.AssertJUnit;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -26,10 +28,6 @@ import org.identityconnectors.framework.spi.operations.UpdateOp;
 import org.identityconnectors.oracle.OracleConfiguration.ConnectionType;
 import org.identityconnectors.test.common.PropertyBag;
 import org.identityconnectors.test.common.TestHelpers;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Test;
 
 /**
  * Tests for {@link OracleConfiguration}
@@ -41,8 +39,8 @@ public class OracleConfigurationTest {
     private final static String WRONG_DATASOURCE = "wrongDatasource";
     private static ThreadLocal<OracleConfiguration> threadCfg = new ThreadLocal<OracleConfiguration>();
 
-    @After
-    public void tearDown() throws SQLException{
+    @AfterMethod
+	public void tearDown() throws SQLException{
     	tearDownClass();
     }
     
@@ -55,7 +53,7 @@ public class OracleConfigurationTest {
     public void testDefaultValues(){
     	OracleConfiguration cfg = createEmptyCfg();
     	Assert.assertEquals("default", cfg.getCaseSensitivityString());
-    	Assert.assertTrue(cfg.isDropCascade());
+    	AssertJUnit.assertTrue(cfg.isDropCascade());
     	Assert.assertEquals(OracleNormalizerName.INPUT.name(), cfg.getNormalizerString());
     }
 
@@ -165,7 +163,7 @@ public class OracleConfigurationTest {
     	cfg.setDataSource("myDS");
     	cfg.validate();
     	Assert.assertEquals(ConnectionType.DATASOURCE, cfg.getConnType());
-    	Assert.assertNull("Driver classname must be null", cfg.getDriverClassName());
+    	AssertJUnit.assertNull("Driver classname must be null", cfg.getDriverClassName());
     	//We should be able to set host even when ignored
     	cfg.setHost("myHost");
     	cfg.setDataSource(null);
@@ -223,7 +221,7 @@ public class OracleConfigurationTest {
     private void assertValidateFail(OracleConfiguration cfg,String failMsg){
         try{
             cfg.validate();
-            fail(failMsg);
+            Assert.fail(failMsg);
         }
         catch(Exception e){}
     }
@@ -231,7 +229,7 @@ public class OracleConfigurationTest {
     private void assertCreateAdminConnectionFail(OracleConfiguration cfg,String failMsg){
         try{
             cfg.createAdminConnection();
-            fail(failMsg);
+            Assert.fail(failMsg);
         }
         catch(Exception e){}
     }
@@ -425,7 +423,7 @@ public class OracleConfigurationTest {
     public void testDataSourceConfiguration() throws SQLException{
         OracleConfiguration dsConf = createDataSourceConfiguration();
         //set to thread local
-        assertArrayEquals(dsConf.getDsJNDIEnv(), dsJNDIEnv);
+        assertEquals(dsConf.getDsJNDIEnv(), dsJNDIEnv);
         dsConf.validate();
         Connection conn = dsConf.createAdminConnection();
         assertNotNull(conn);
@@ -465,7 +463,7 @@ public class OracleConfigurationTest {
         cfg.setCaseSensitivityString("Invalid");
         try{
         	cfg.validate();
-        	fail("Validate must fail for invalid caseSensitivityString");
+        	Assert.fail("Validate must fail for invalid caseSensitivityString");
         }
         catch(RuntimeException e){}
         
@@ -518,11 +516,11 @@ public class OracleConfigurationTest {
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             if(method.getName().equals("getConnection")){
                 if(threadCfg.get().getUser() == null){
-                    Assert.assertEquals("getConnection must be called without user and password",0,method.getParameterTypes().length);
+                    AssertJUnit.assertEquals("getConnection must be called without user and password",0,method.getParameterTypes().length);
                     return createThinConfiguration().createAdminConnection();
                 }
                 else{
-                    Assert.assertEquals("getConnection must be called with user and password",2,method.getParameterTypes().length);
+                	AssertJUnit.assertEquals("getConnection must be called with user and password",2,method.getParameterTypes().length);
                     return createThinConfiguration().createAdminConnection();
                 }
             }

@@ -1,7 +1,8 @@
 package org.identityconnectors.oracle;
 
-import static org.junit.Assert.*;
-
+import org.testng.annotations.Test;
+import org.testng.Assert;
+import org.testng.AssertJUnit;
 import java.sql.*;
 
 import org.identityconnectors.common.security.GuardedString;
@@ -9,7 +10,6 @@ import org.identityconnectors.dbcommon.SQLUtil;
 import org.identityconnectors.oracle.OracleDriverConnectionInfo.Builder;
 import org.identityconnectors.test.common.PropertyBag;
 import org.identityconnectors.test.common.TestHelpers;
-import org.junit.*;
 
 /**
  * Tests for OracleSpecifics
@@ -71,14 +71,15 @@ public class OracleSpecificsTest {
         return createOciDriverConnection(user, password);
     }
     
-    private void testStaleConnection(Connection systemConn,Connection testConn) throws SQLException{
+    @Test(enabled = false)
+	private void testStaleConnection(Connection systemConn,Connection testConn) throws SQLException{
         //Here connection should be ok
         OracleSpecifics.testConnection(testConn);
         OracleSpecifics.killConnection(systemConn, testConn);
         //Here testConn is staled
         try{
         	OracleSpecifics.testConnection(testConn);
-            fail("Session is killed, test should fail");
+            Assert.fail("Session is killed, test should fail");
         }
         catch(Exception e){
         }
@@ -188,12 +189,12 @@ public class OracleSpecificsTest {
     public void testParseConnectionInfo() throws SQLException {
         Connection conn = createSystemThinDriverConnection();
         OracleDriverConnectionInfo info = OracleSpecifics.parseConnectionInfo(conn, TestHelpers.createDummyMessages());
-        assertNotNull(info);
+        AssertJUnit.assertNotNull(info);
         String user = testProps.getStringProperty("thin.user");
         String passwordString = testProps.getStringProperty("thin.password");
         OracleDriverConnectionInfo newInfo = new OracleDriverConnectionInfo.Builder().setvalues(info).setUser(user).setPassword(new GuardedString(passwordString.toCharArray())).build();
         Connection conn1 = OracleSpecifics.createThinDriverConnection(newInfo, TestHelpers.createDummyMessages());
-        assertNotNull(conn1);
+        Assert.assertNotNull(conn1);
         conn1.close();
         conn.close();
     }

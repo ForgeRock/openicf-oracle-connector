@@ -3,9 +3,10 @@
  */
 package org.identityconnectors.oracle;
 
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
-
+import static org.testng.AssertJUnit.assertSame;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+import org.testng.AssertJUnit;
 import java.sql.SQLException;
 
 import org.identityconnectors.common.CollectionUtil;
@@ -17,8 +18,6 @@ import org.identityconnectors.framework.common.objects.AttributeBuilder;
 import org.identityconnectors.framework.common.objects.Name;
 import org.identityconnectors.framework.common.objects.ObjectClass;
 import org.identityconnectors.framework.common.objects.Uid;
-import org.junit.Assert;
-import org.junit.Test;
 
 /**
  * Tests for OracleConnector except tests for concrete SPI operation
@@ -39,7 +38,7 @@ public class OracleConnectorTest extends OracleConnectorAbstractTest{
         OracleConnector con = new OracleConnector();
         try{
 	        con.checkAlive();
-	        fail("Must fail for not initialized");
+	        Assert.fail("Must fail for not initialized");
         }
         catch(RuntimeException e){}
     }
@@ -67,7 +66,7 @@ public class OracleConnectorTest extends OracleConnectorAbstractTest{
         OracleConfiguration cfg = new OracleConfiguration();
         try{
             oc.init(cfg);
-            fail("Init should fail for uncomplete cfg");
+            Assert.fail("Init should fail for uncomplete cfg");
         }
         catch(RuntimeException e){
         }
@@ -78,7 +77,7 @@ public class OracleConnectorTest extends OracleConnectorAbstractTest{
     	OracleConnector c = new OracleConnector();
     	try{
     		c.test();
-    		fail("Test must fail if init was not called");
+    		Assert.fail("Test must fail if init was not called");
     	}
     	catch(RuntimeException e){
     	}
@@ -101,9 +100,9 @@ public class OracleConnectorTest extends OracleConnectorAbstractTest{
     	final OracleConnector c = new OracleConnector();
     	//First use driver connection
     	c.init(OracleConfigurationTest.createThinConfiguration());
-    	Assert.assertNull("Admin connection should be initialized lazy", c.getAdminConnection());
+    	AssertJUnit.assertNull("Admin connection should be initialized lazy", c.getAdminConnection());
     	c.test();
-    	Assert.assertNotNull("Admin connection should not be null after SPI OP", c.getAdminConnection());
+    	AssertJUnit.assertNotNull("Admin connection should not be null after SPI OP", c.getAdminConnection());
     	//We should be able to use the connection
     	c.getAdminConnection().createStatement().close();
     	//Try to run contract
@@ -112,7 +111,7 @@ public class OracleConnectorTest extends OracleConnectorAbstractTest{
 					public void run() {
 						Assert.assertNotNull(c.getAdminConnection());
 						try {
-							Assert.assertFalse(c.getAdminConnection().isClosed());
+							AssertJUnit.assertFalse(c.getAdminConnection().isClosed());
 						} catch (SQLException e) {
 							throw ConnectorException.wrap(e);
 						}
@@ -127,9 +126,9 @@ public class OracleConnectorTest extends OracleConnectorAbstractTest{
     	final OracleConnector c = new OracleConnector();
     	//First use driver connection
     	c.init(OracleConfigurationTest.createDataSourceConfiguration());
-    	Assert.assertNull("Admin connection should be initialized lazy", c.getAdminConnection());
+    	AssertJUnit.assertNull("Admin connection should be initialized lazy", c.getAdminConnection());
     	c.test();
-    	Assert.assertNull("Admin connection should be null after SPI OP", c.getAdminConnection());
+    	AssertJUnit.assertNull("Admin connection should be null after SPI OP", c.getAdminConnection());
     	//Try to run contract
     	runSimpleContract(c,
     			new Runnable(){
@@ -170,7 +169,7 @@ public class OracleConnectorTest extends OracleConnectorAbstractTest{
     	connector.delete(ObjectClass.ACCOUNT, uid,null);
     	after.run();
     	//Create schema
-    	Assert.assertNotNull(connector.schema());
+    	AssertJUnit.assertNotNull(connector.schema());
     	after.run();
 
     }

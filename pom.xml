@@ -35,11 +35,11 @@
     <packaging>bundle</packaging>
     <name>Oracle Connector</name>
     <description>Connector for Oracle</description>
-    <url></url>
+    <url>https://github.com/ForgeRock/openicf-oracle-connector</url>
     <scm>
-        <connection>scm:git:ssh://git@stash.forgerock.org:7999/openicf/oracle-connector.git</connection>
-        <developerConnection>scm:git:ssh://git@stash.forgerock.org:7999/openicf/oracle-connector.git</developerConnection>
-        <url>http://stash.forgerock.org/projects/OPENICF/repos/oracle-connector/browse/</url>
+        <connection>scm:git:git@github.com:forgerock/openicf-oracle-connector.git</connection>
+        <developerConnection>scm:git:git@github.com:forgerock/openicf-oracle-connector.git</developerConnection>
+        <url>scm:git:git@github.com:forgerock/openicf-oracle-connector.git</url>
     </scm>
     <properties>
         <connectorPackage>org.identityconnectors.oracle</connectorPackage>

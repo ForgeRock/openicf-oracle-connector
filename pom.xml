@@ -35,15 +35,7 @@
     <packaging>bundle</packaging>
     <name>Oracle Connector</name>
     <description>Connector for Oracle</description>
-    <url>https://openicf.forgerock.org/connectors/oracle-connector</url>
-    <issueManagement>
-        <system>jira</system>
-        <url>https://bugster.forgerock.org/jira/browse/OPENICF/component/10177</url>
-    </issueManagement>
-    <ciManagement>
-        <system>jenkins</system>
-        <url>https://ci.forgerock.org/view/OpenICF/job/OpenICF - oracle-connector - postcommit/</url>
-    </ciManagement>
+    <url></url>
     <scm>
         <connection>scm:git:ssh://git@stash.forgerock.org:7999/openicf/oracle-connector.git</connection>
         <developerConnection>scm:git:ssh://git@stash.forgerock.org:7999/openicf/oracle-connector.git</developerConnection>

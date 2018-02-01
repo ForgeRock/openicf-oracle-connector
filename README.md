@@ -1,6 +1,6 @@
 # oracle-connector
 
-An OpenICF connector built to work with the [ForgeRock Identity Management Provisioning System](https://www.forgerock.com/platform/identity-management/identity-provisioning). This connector allows the ForgeRock Identity Platform to provision users to an IBM DB2 database. 
+An OpenICF connector built to work with the [ForgeRock Identity Management Provisioning System](https://www.forgerock.com/platform/identity-management/identity-provisioning). This connector allows the ForgeRock Identity Platform to provision users to an Oracle database. 
 
 **NOTE:** This is a community connector and is made available so that customers with a ForgeRock subscription can build, develop or fork this repository. See the legal disclaimer bit below.
 

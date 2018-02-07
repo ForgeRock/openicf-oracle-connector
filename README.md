@@ -25,7 +25,8 @@ Identity Platform to provision users to an Oracle database.
  develop or fork this repository. See the legal disclaimer bit below.
  
 ## Compatability
-Works with [OpenICF 1.5](https://backstage.forgerock.com/docs/openicf/1.5/release-notes/index.html). Please read the release notes for more information on compatability with Java Connector Servers and version of OpenIDM/IDM. 
+Works with [OpenICF 1.5](https://backstage.forgerock.com/docs/openicf/1.5/release-notes/index.html). Please read the 
+release notes for more information on compatability with Java Connector Servers and version of OpenIDM/IDM. 
 
 ## Building
 The code in this repository has binary dependencies that live in the ForgeRock maven repository. Maven can be configured
@@ -34,11 +35,11 @@ The code in this repository has binary dependencies that live in the ForgeRock m
 
 To get and build this repository you will need a build environment that has git, maven and a JDK installed. 
 
-This has been confirmed as buildin with Maven 3.3.3, Oracle JDK 1.8.0_91. 
+This has been confirmed as building with Maven 3.3.3, Oracle JDK 1.8.0_91. 
 
 ```
 $ git clone <repo_url>
-$ cd <repo_url>
+$ cd <repo_dir>
 $ mvn clean install
 ```
 
